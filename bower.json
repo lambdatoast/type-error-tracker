@@ -1,6 +1,9 @@
 {
   "name": "HelloIonic",
   "private": "true",
+  "dependencies": {
+    "howler.js": "1.1.28"
+  },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.1.1"
   }

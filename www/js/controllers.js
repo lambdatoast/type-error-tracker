@@ -25,4 +25,19 @@ angular.module('starter.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
+})
+
+.controller('PatternsCtrl', function($scope) {
+  var sounds = {
+    kick: new Howl({
+      urls: ['audio/timpani.wav']
+    }),
+    snare: new Howl({
+      urls: ['audio/snare.wav']
+    })
+  };
+
+  $scope.note = function (name) {
+    sounds[name].play();
+  };
 });
