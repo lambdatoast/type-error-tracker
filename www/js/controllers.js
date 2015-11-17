@@ -35,8 +35,8 @@ angular.module('starter.controllers', [])
 
   function load() {
     try {
-      return JSON.parse($window.localStorage.getItem('errors'));
-
+      var xs = JSON.parse($window.localStorage.getItem('errors'));
+      return xs ? xs : [];
     } catch (e) {
       return [];
     }
