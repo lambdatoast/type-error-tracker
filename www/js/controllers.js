@@ -49,7 +49,7 @@ angular.module('starter.controllers', [])
   $scope.errors = [];
 
   function init() {
-    $scope.errors = Errors.all();
+    $scope.errors = Errors.all().concat([]).reverse();
   }
 
   $scope.$on('$ionicView.enter', function(e) {
