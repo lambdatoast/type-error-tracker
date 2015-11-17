@@ -1,0 +1,24 @@
+<ion-view view-title="Errors">
+  <ion-content>
+    <form ng-submit="add()">
+      <div class="item range">
+        {{ newError.cost }}
+        <input type="range" min="1" placeholder="Cost" ng-model="newError.cost">
+        <i class="icon ion-clock"></i>
+      </div>
+      <div>
+        <ion-radio ng-model="newError.unit" ng-value="'min'">minutes</ion-radio>
+        <ion-radio ng-model="newError.unit" ng-value="'hrs'">hours</ion-radio>
+      </div>
+      <button class="button button-block button-stable">
+        Add
+      </button>
+    </form>
+    <div>
+      <ion-item collection-repeat="e in errors">
+        {{e.type}} error ({{e.cost}} {{e.unit}})
+      </ion-item>
+    </div>
+  </ion-content>
+</ion-view>
+

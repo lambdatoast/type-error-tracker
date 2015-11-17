@@ -27,7 +27,38 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('PatternsCtrl', function($scope) {
+.controller('ErrorsCtrl', function($scope, $window) {
+
+  function save(errors) {
+    $window.localStorage.setItem('errors', JSON.stringify(errors));
+  }
+
+  function load() {
+    try {
+      return JSON.parse($window.localStorage.getItem('errors'));
+
+    } catch (e) {
+      return [];
+    }
+  }
+
+  $scope.errors = load();
+
+  $scope.newError = {
+    type: 'Type',
+    cost: 1,
+    unit: 'min'
+  };
+
+  $scope.add = function () {
+    $scope.errors.push({
+      type: $scope.newError.type, 
+      cost: $scope.newError.cost,
+      unit: $scope.newError.unit
+    });
+    save($scope.errors);
+  };
+
   var sounds = {
     kick: new Howl({
       urls: ['audio/timpani.wav']
@@ -40,4 +71,5 @@ angular.module('starter.controllers', [])
   $scope.note = function (name) {
     sounds[name].play();
   };
+
 });
