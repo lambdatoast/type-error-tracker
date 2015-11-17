@@ -1,1 +1,8 @@
 /* Empty. Add your own CSS if you like */
+.error-info {
+  line-height: 41px;
+}
+.error-remove {
+  position: absolute;
+  right: 15px;
+}

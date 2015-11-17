@@ -1,6 +1,23 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function($scope, Errors) {
+  // [Errors] -> String
+  function totalHours(errors) {
+    return Number(errors.reduce(function (acc, err) {
+      var cost = Number(err.cost);
+      return acc + (err.unit === 'hrs' ? cost : cost/60);
+    }, 0)).toFixed(2);
+  }
+  function is(type) { return function (error) { return error.type === type; }; }
+  $scope.$on('$ionicView.enter', function(e) {
+    $scope.errors = Errors.all();
+    $scope.errorCount = $scope.errors.length;
+    $scope.hours = {
+      Type: totalHours($scope.errors.filter(is('Type'))),
+      Other: totalHours($scope.errors.filter(is('Other')))
+    };
+  });
+})
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
@@ -27,22 +44,17 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('ErrorsCtrl', function($scope, $window) {
+.controller('ErrorsCtrl', function($scope, Errors) {
 
-  function save(errors) {
-    $window.localStorage.setItem('errors', JSON.stringify(errors));
+  $scope.errors = [];
+
+  function init() {
+    $scope.errors = Errors.all();
   }
 
-  function load() {
-    try {
-      var xs = JSON.parse($window.localStorage.getItem('errors'));
-      return xs ? xs : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  $scope.errors = load();
+  $scope.$on('$ionicView.enter', function(e) {
+    init();
+  });
 
   $scope.newError = {
     type: 'Type',
@@ -51,12 +63,22 @@ angular.module('starter.controllers', [])
   };
 
   $scope.add = function () {
-    $scope.errors.push({
+    Errors.save({
       type: $scope.newError.type, 
       cost: $scope.newError.cost,
       unit: $scope.newError.unit
     });
-    save($scope.errors);
+    init();
+  };
+
+  $scope.remove = function (error) {
+    Errors.remove(error);
+    init();
+  };
+
+  $scope.clear = function () {
+    Errors.clear();
+    init();
   };
 
   var sounds = {

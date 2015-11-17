@@ -1,22 +1,26 @@
 <ion-view view-title="Errors">
   <ion-content>
     <form ng-submit="add()">
+      <div>
+        <ion-radio ng-model="newError.type" ng-value="'Type'" name="type">type</ion-radio>
+        <ion-radio ng-model="newError.type" ng-value="'Other'" name="type">other</ion-radio>
+      </div>
       <div class="item range">
         {{ newError.cost }}
-        <input type="range" min="1" placeholder="Cost" ng-model="newError.cost">
+        <input type="range" min="1" max="120" placeholder="Cost" ng-model="newError.cost">
         <i class="icon ion-clock"></i>
       </div>
       <div>
-        <ion-radio ng-model="newError.unit" ng-value="'min'">minutes</ion-radio>
-        <ion-radio ng-model="newError.unit" ng-value="'hrs'">hours</ion-radio>
+        <ion-radio ng-model="newError.unit" ng-value="'min'" name="unit">minutes</ion-radio>
+        <ion-radio ng-model="newError.unit" ng-value="'hrs'" name="unit">hours</ion-radio>
       </div>
-      <button class="button button-block button-stable">
-        Add
-      </button>
+      <button class="button button-block button-stable">Add</button>
+      <button type="button" ng-click="clear()" class="button button-block button-assertive">Clear</button>
     </form>
     <div>
       <ion-item collection-repeat="e in errors">
-        {{e.type}} error ({{e.cost}} {{e.unit}})
+        <span class="error-info">{{e.id | date:'short'}} - <strong>{{e.type}}</strong> ({{e.cost}} {{e.unit}})</span> 
+        <button type="button" ng-click="remove(e)" class="error-remove button button-clear icon ion-trash-a"></button>
       </ion-item>
     </div>
   </ion-content>
