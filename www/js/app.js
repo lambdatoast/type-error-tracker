@@ -49,6 +49,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         controller: 'ErrorsCtrl'
       }
     }
+  })
+
+  .state('tab.errors-edit', {
+    url: '/errors/edit/:id',
+    resolve: {
+      error: function ($stateParams, Errors) {
+        return Errors.getById($stateParams.id);
+      }
+    },
+    views: {
+      'tab-errors': {
+        templateUrl: 'templates/tab-errors-edit.html',
+        controller: 'ErrorsEditCtrl'
+      }
+    }
   });
 
   // if none of the above states are matched, use this as the fallback

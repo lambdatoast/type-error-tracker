@@ -34,14 +34,16 @@ angular.module('starter.controllers', [])
   $scope.newError = {
     type: 'Type',
     cost: 1,
-    unit: 'min'
+    unit: 'min',
+    typeSystemFeatures: Errors.typeSystemFeatures
   };
 
   $scope.add = function () {
     Errors.save({
       type: $scope.newError.type, 
       cost: $scope.newError.cost,
-      unit: $scope.newError.unit
+      unit: $scope.newError.unit,
+      typeSystemFeatures: $scope.newError.typeSystemFeatures
     });
     init();
   };
@@ -78,4 +80,13 @@ angular.module('starter.controllers', [])
     sounds[name].play();
   };
 
+})
+
+.controller('ErrorsEditCtrl', function($scope, $state, error, Errors) {
+  $scope.error = error;
+  $scope.typeSystemFeatures = Object.keys(error.typeSystemFeatures);
+  $scope.update = function () {
+    Errors.update($scope.error);
+    $state.go('tab.errors');
+  };
 });

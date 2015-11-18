@@ -1,0 +1,11 @@
+<ion-view view-title="Errors Edit">
+  <ion-content>
+    <form ng-submit="update()">
+      <label>Typing mechanisms that could have caught the error:</label>
+      <div class="list">
+        <ion-checkbox ng-repeat="tsf in typeSystemFeatures" ng-model="error.typeSystemFeatures[tsf].checked" ng-checked="error.typeSystemFeatures[tsf].checked"> {{ tsf }} </ion-checkbox>
+      </div>
+      <button class="button button-block button-stable">Update</button>
+    </form>
+  </ion-content>
+</ion-view>

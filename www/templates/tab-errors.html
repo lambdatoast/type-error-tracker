@@ -20,6 +20,7 @@
     <div>
       <ion-item collection-repeat="e in errors">
         <span class="error-info">{{e.id | date:'short'}} - <strong>{{e.type}}</strong> ({{e.cost}} {{e.unit}})</span> 
+        <a ui-sref="tab.errors-edit({id: e.id})" class="button button-clear icon ion-edit"></a>
         <button type="button" ng-click="remove(e)" class="error-remove button button-clear icon ion-trash-a"></button>
       </ion-item>
     </div>
