@@ -44,7 +44,7 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('ErrorsCtrl', function($scope, Errors) {
+.controller('ErrorsCtrl', function($scope, Errors, $ionicPopup) {
 
   $scope.errors = [];
 
@@ -77,8 +77,17 @@ angular.module('starter.controllers', [])
   };
 
   $scope.clear = function () {
-    Errors.clear();
-    init();
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Clear records',
+      template: 'Are you sure you want to remove all records?'
+    });
+    confirmPopup.then(function(res) {
+      if(res) {
+        Errors.clear();
+        init();
+      } else {
+      }
+    });
   };
 
   var sounds = {
