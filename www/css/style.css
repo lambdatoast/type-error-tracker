@@ -7,3 +7,12 @@
   position: absolute;
   right: 15px;
 }
+.costs {
+  font-weight: normal;
+  font-size: 80%;
+}
+
+.costs td {
+  color: #555;
+  padding: 0 2px;
+}

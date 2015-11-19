@@ -1,56 +1,30 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, Errors) {
-  // [Errors] -> String
-  function totalHours(errors) {
-    return Number(errors.reduce(function (acc, err) {
-      var cost = Number(err.cost);
-      return acc + (err.unit === 'hrs' ? cost : cost/60);
-    }, 0)).toFixed(2);
-  }
-  function is(type) { return function (error) { return error.type === type; }; }
+.controller('DashCtrl', function($scope, Error, Cost) {
   $scope.$on('$ionicView.enter', function(e) {
-    $scope.errors = Errors.all();
+    $scope.errors = Error.all();
     $scope.errorCount = $scope.errors.length;
-    $scope.hours = {
-      Type: totalHours($scope.errors.filter(is('Type'))),
-      Other: totalHours($scope.errors.filter(is('Other')))
-    };
+    $scope.hours = Cost.totals($scope.errors);
   });
 })
 
-.controller('ErrorsCtrl', function($scope, Errors, $ionicPopup) {
-
-  $scope.errors = [];
-
-  function init() {
-    $scope.errors = Errors.all().concat([]).reverse();
-  }
-
-  $scope.$on('$ionicView.enter', function(e) {
-    init();
-  });
+.controller('ErrorsCtrl', function($scope, $state, Error, $ionicPopup) {
 
   $scope.newError = {
     type: 'Type',
     cost: 1,
     unit: 'min',
-    typeSystemFeatures: Errors.typeSystemFeatures
+    typeSystemFeatures: Error.typeSystemFeatures
   };
 
   $scope.add = function () {
-    Errors.save({
+    Error.save({
       type: $scope.newError.type, 
       cost: $scope.newError.cost,
       unit: $scope.newError.unit,
       typeSystemFeatures: $scope.newError.typeSystemFeatures
     });
-    init();
-  };
-
-  $scope.remove = function (error) {
-    Errors.remove(error);
-    init();
+    $state.go('tab.history');
   };
 
   $scope.clear = function () {
@@ -60,8 +34,7 @@ angular.module('starter.controllers', [])
     });
     confirmPopup.then(function(res) {
       if(res) {
-        Errors.clear();
-        init();
+        Error.clear();
       } else {
       }
     });
@@ -82,11 +55,62 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ErrorsEditCtrl', function($scope, $state, error, Errors) {
+.controller('ErrorsEditCtrl', function($scope, $state, error, Error) {
   $scope.error = error;
   $scope.typeSystemFeatures = Object.keys(error.typeSystemFeatures);
   $scope.update = function () {
-    Errors.update($scope.error);
-    $state.go('tab.errors');
+    Error.update($scope.error);
+    $state.go('tab.history');
   };
+})
+
+.controller('HistoryCtrl', function($scope, $state, Error, Cost, $ionicPopup, moment) {
+  $scope.errors = [];
+  $scope.history = [];
+
+  function init() {
+    $scope.errors = Error.all().concat([]).reverse();
+    $scope.history = createHistory($scope.errors);
+  }
+
+  function createHistory(errors) {
+    var FORMAT = 'YYYY-MM-DD';
+    var map = errors.reduce(function (acc, e) {
+      var day = moment(new Date(e.id)).format(FORMAT);
+      acc[day] = acc[day] ? acc[day].concat([e]) : [e];
+      return acc;
+    }, {});
+    return Object.keys(map).sort(function (date1, date2) {
+      return moment(date1, FORMAT).isBefore(moment(date2, FORMAT)) ? -1 : 1;
+    }).map(function (k) {
+      var costs = Cost.totals(map[k]);
+      return { 
+        day: k, 
+        errors: map[k], 
+        //costs: Cost.totals(map[k])
+        costs: Object.keys(costs).reduce(function (acc, k) {
+          return acc.concat([{type: k, cost: costs[k]}]);
+        }, [])
+      };
+    });
+  }
+
+  $scope.$on('$ionicView.enter', function(e) {
+    init();
+  });
+
+  $scope.remove = function (error) {
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Remove',
+      template: 'Are you sure you want to remove this record?'
+    });
+    confirmPopup.then(function(res) {
+      if(res) {
+        Error.remove(error);
+        init();
+      } else {
+      }
+    });
+  };
+
 });

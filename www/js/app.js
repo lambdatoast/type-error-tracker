@@ -51,15 +51,25 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-  .state('tab.errors-edit', {
-    url: '/errors/edit/:id',
+  .state('tab.history', {
+    url: '/history',
+    views: {
+      'tab-history': {
+        templateUrl: 'templates/tab-history.html',
+        controller: 'HistoryCtrl'
+      }
+    }
+  })
+
+  .state('tab.history-edit', {
+    url: '/history/edit/:id',
     resolve: {
-      error: function ($stateParams, Errors) {
-        return Errors.getById($stateParams.id);
+      error: function ($stateParams, Error) {
+        return Error.getById($stateParams.id);
       }
     },
     views: {
-      'tab-errors': {
+      'tab-history': {
         templateUrl: 'templates/tab-errors-edit.html',
         controller: 'ErrorsEditCtrl'
       }

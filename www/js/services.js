@@ -1,6 +1,10 @@
 angular.module('starter.services', [])
 
-.factory('Errors', function($window) {
+.factory('moment', function($window) {
+  return $window.moment;
+})
+
+.factory('Error', function($window) {
 
   function save(error) {
     error.id = +(new Date());
@@ -50,12 +54,15 @@ angular.module('starter.services', [])
   var typeSystemFeatures = {
     nominal: { checked: false },
     structural: { checked: false },
-    dependent: { checked: false },
-    liquid: { checked: false },
-    linear: { checked: false },
+    polymorphic: { checked: false },
+    existential: { checked: false },
     phantom: {checked: false },
-    polymorphic: { checked: false }
+    liquid: { checked: false },
+    dependent: { checked: false },
+    linear: { checked: false }
   };
+
+  function is(type) { return function (error) { return error.type === type; }; }
 
   return {
     all: load,
@@ -64,7 +71,27 @@ angular.module('starter.services', [])
     remove: remove,
     update: update,
     getById: getById,
-    typeSystemFeatures: typeSystemFeatures
+    typeSystemFeatures: typeSystemFeatures,
+    is: is
   };
 
-});
+})
+
+.factory('Cost', function(Error) {
+  // [Error] -> String
+  function totalHours(errors) {
+    return Number(errors.reduce(function (acc, err) {
+      var cost = Number(err.cost);
+      return acc + (err.unit === 'hrs' ? cost : cost/60);
+    }, 0)).toFixed(2);
+  }
+  function totals(errors) {
+    return {
+      Type: totalHours(errors.filter(Error.is('Type'))),
+      Other: totalHours(errors.filter(Error.is('Other')))
+    };
+  }
+  return {
+    totals: totals
+  };
+})

@@ -1,0 +1,23 @@
+<ion-view view-title="History">
+  <ion-content class="padding">
+    <div>
+      <div ng-repeat="h in history">
+        <div class="item item-divider">
+          {{ h.day }} <hr>
+          <table class="costs">
+            <tr ng-repeat="c in h.costs | filter: {cost: '!x.00'}">
+              <td><strong>{{ c.type.toLowerCase() }}</strong> errors:</td>
+              <td>{{ c.cost }} hours</td>
+            </tr>
+          </table>
+        </div>
+        <ion-item collection-repeat="e in h.errors">
+          <span class="error-info">{{e.id | date:'h:mma'}} - <strong>{{e.type}}</strong> ({{e.cost}} {{e.unit}})</span> 
+          <a ui-sref="tab.history-edit({id: e.id})" class="button button-clear icon ion-edit"></a>
+          <button type="button" ng-click="remove(e)" class="error-remove button button-clear icon ion-trash-a"></button>
+        </ion-item>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
+
