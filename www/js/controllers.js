@@ -17,6 +17,7 @@ angular.module('starter.controllers', [])
       acc.data = acc.data.concat([typeSystemFeaturesDemand[feature]]);
       return acc;
     }, {labels: [], data: []});
+    $scope.showTypeSystemFeaturesDemand = $scope.typeSystemFeaturesDemand.data.some(function (n) { return n > 0; });
   });
 })
 

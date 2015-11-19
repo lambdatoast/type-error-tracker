@@ -1,15 +1,7 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="Statistics">
   <ion-content class="padding">
     <div class="list card">
-      <div class="item item-divider">Total Errors</div>
-      <div class="item item-body">
-        <div>
-          A total of <strong>{{errorCount}}</strong> errors have been registered
-        </div>
-      </div>
-    </div>
-    <div class="list card">
-      <div class="item item-divider">Cost</div>
+      <div class="item item-divider">Cost in hours</div>
       <div class="item item-body">
         <div>
           <strong>{{hours.Type}}</strong> hours wasted in type errors.
@@ -19,7 +11,7 @@
         </div>
       </div>
     </div>
-    <div class="list card">
+    <div class="list card" ng-show="showTypeSystemFeaturesDemand">
       <div class="item item-divider">Type System Features Demand</div>
       <div class="item item-body">
         <canvas id="doughnut" class="chart chart-doughnut" chart-data="typeSystemFeaturesDemand.data" chart-labels="typeSystemFeaturesDemand.labels"></canvas> 
