@@ -11,11 +11,11 @@
             </tr>
           </table>
         </div>
-        <ion-item collection-repeat="e in h.errors">
+        <div class="item" ng-repeat="e in h.errors">
           <span class="error-info">{{e.id | date:'h:mma'}} - <strong>{{e.type}}</strong> ({{e.cost}} {{e.unit}})</span> 
           <a ui-sref="tab.history-edit({id: e.id})" class="button button-clear icon ion-edit"></a>
           <button type="button" ng-click="remove(e)" class="error-remove button button-clear icon ion-trash-a"></button>
-        </ion-item>
+        </div>
       </div>
     </div>
   </ion-content>

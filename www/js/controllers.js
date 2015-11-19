@@ -105,7 +105,7 @@ angular.module('starter.controllers', [])
           return acc.concat([{type: k, cost: costs[k]}]);
         }, [])
       };
-    });
+    }).reverse();
   }
 
   $scope.$on('$ionicView.enter', function(e) {
