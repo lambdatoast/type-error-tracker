@@ -5,6 +5,18 @@ angular.module('starter.controllers', [])
     $scope.errors = Error.all();
     $scope.errorCount = $scope.errors.length;
     $scope.hours = Cost.totals($scope.errors);
+    var typeSystemFeaturesDemand = $scope.errors.filter(Error.is('Type')).reduce(function (acc, e) {
+      return Object.keys(e.typeSystemFeatures).reduce(function (acc, feature) {
+        acc[feature] = acc[feature] !== undefined ? acc[feature] : 0;
+        acc[feature] = acc[feature] + (e.typeSystemFeatures[feature].checked === true ? 1 : 0);
+        return acc;
+      }, acc);
+    }, {});
+    $scope.typeSystemFeaturesDemand = Object.keys(typeSystemFeaturesDemand).reduce(function (acc, feature) {
+      acc.labels = acc.labels.concat([feature.toUpperCase().slice(0,1) + feature.slice(1) + ' types']);
+      acc.data = acc.data.concat([typeSystemFeaturesDemand[feature]]);
+      return acc;
+    }, {labels: [], data: []});
   });
 })
 
