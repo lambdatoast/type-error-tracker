@@ -98,10 +98,9 @@ angular.module('starter.services', [])
 })
 
 .factory('Cost', function(Error) {
-  // [Error] -> String
-  function totalHours(errors) {
+  function totalHours(errors : Array<TE>) : string {
     return Number(errors.reduce(function (acc, err) {
-      var cost = Number(err.cost);
+      var cost = err.cost;
       return acc + (err.unit === 'hrs' ? cost : cost/60);
     }, 0)).toFixed(2);
   }
