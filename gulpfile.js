@@ -1,14 +1,16 @@
+var tsc = require('gulp-typescript');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var bower = require('bower');
-var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
 
 var paths = {
-  sass: ['./scss/**/*.scss']
+  sass: ['./scss/**/*.scss'],
+  src: ['./src/app/**/*.ts'],
+  js: ['./www/js/**/*.js']
 };
 
 gulp.task('default', ['sass']);
@@ -26,8 +28,18 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
+gulp.task('tsc', function () {
+  return gulp.src('src/app/**/*.ts')
+    .pipe(tsc({
+      noImplicitAny: false,
+      out: 'app.build.js'
+    }))
+    .pipe(gulp.dest('www/js'));
+});
+
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
+  gulp.watch(paths.src, ['tsc']);
 });
 
 gulp.task('install', ['git-check'], function() {
