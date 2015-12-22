@@ -1,10 +1,17 @@
 /// <reference path="../definitions/angularjs/angular.d.ts" />
 
+type Identified<A> = A & {id: string};
+
 interface TE {
     type: string;
     cost: number;
     unit: string;
     typeSystemFeatures: any;
+}
+
+interface Totals {
+    Type: string;
+    Other: string;
 }
 
 interface ErrorModule {
@@ -28,12 +35,12 @@ angular.module('starter.services', [])
 
   function save(error) {
     error.id = +(new Date());
-    var errors = load();
+    var errors = all();
     errors.push(error);
     $window.localStorage.setItem('errors', JSON.stringify(errors));
   }
 
-  function load() {
+  function all() : Array<Identified<TE>> {
     try {
       var xs = JSON.parse($window.localStorage.getItem('errors'));
       return xs ? xs : [];
@@ -43,7 +50,7 @@ angular.module('starter.services', [])
   }
 
   function getById(id) {
-    var xs = load().filter(function (e) {
+    var xs = all().filter(function (e) {
       return e.id+'' === id+'';
     });
     if (xs.length) {
@@ -58,14 +65,14 @@ angular.module('starter.services', [])
   }
 
   function remove(error) {
-    var errors = load().filter(function (e) {
+    var errors = all().filter(function (e) {
       return e.id !== error.id;
     });
     $window.localStorage.setItem('errors', JSON.stringify(errors));
   }
 
-  function update(newError) {
-    var errors = load().map(function (e) {
+  function update(newError: Identified<TE>) {
+    var errors = all().map(function (e) {
       return e.id === newError.id ? newError : e;
     });
     $window.localStorage.setItem('errors', JSON.stringify(errors));
@@ -82,10 +89,10 @@ angular.module('starter.services', [])
     linear: { checked: false }
   };
 
-  function is(type) { return function (error) { return error.type === type; }; }
+  function is(type: string) { return function (error) { return error.type === type; }; }
 
   return {
-    all: load,
+    all: all,
     save: save,
     clear: clear,
     remove: remove,
@@ -104,7 +111,7 @@ angular.module('starter.services', [])
       return acc + (err.unit === 'hrs' ? cost : cost/60);
     }, 0)).toFixed(2);
   }
-  function totals(errors) {
+  function totals(errors) : Totals {
     return {
       Type: totalHours(errors.filter(Error.is('Type'))),
       Other: totalHours(errors.filter(Error.is('Other')))
