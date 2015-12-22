@@ -15,14 +15,14 @@ interface Totals {
 }
 
 interface ErrorModule {
-  all: () => any,
-  save: (error: TE) => any,
-  clear: () => any,
-  remove: () => any,
-  update: () => any,
-  getById: () => any,
-  typeSystemFeatures: Object,
-  is: () => any
+  all: () => Array<Identified<TE>>;
+  save: (error: TE) => any;
+  clear: () => any;
+  remove: () => any;
+  update: () => any;
+  getById: () => any;
+  typeSystemFeatures: Object;
+  is: (s: string) => boolean;
 };
 
 angular.module('starter.services', [])

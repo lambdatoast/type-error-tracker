@@ -1,8 +1,9 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, Error, Cost) {
+.controller('DashCtrl', function($scope, Error : ErrorModule, Cost) {
   $scope.$on('$ionicView.enter', function(e) {
-    $scope.errors = Error.all();
+    var errors : Array<Identified<TE>> = Error.all();
+    $scope.errors = errors;
     $scope.errorCount = $scope.errors.length;
     $scope.hours = Cost.totals($scope.errors);
     var typeSystemFeaturesDemand = $scope.errors.filter(Error.is('Type')).reduce(function (acc, e) {
