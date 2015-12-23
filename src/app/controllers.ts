@@ -1,3 +1,4 @@
+
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, Error : ErrorModule, Cost) {
@@ -76,7 +77,7 @@ angular.module('starter.controllers', [])
     $scope.history = createHistory($scope.errors);
   }
 
-  function createHistory(errors) {
+  function createHistory(errors: Identified<TE>[]): App.History {
     var FORMAT = 'YYYY-MM-DD';
     var map = errors.reduce(function (acc, e) {
       var day = moment(new Date(e.id)).format(FORMAT);
@@ -90,7 +91,6 @@ angular.module('starter.controllers', [])
       return { 
         day: k, 
         errors: map[k], 
-        //costs: Cost.totals(map[k])
         costs: Object.keys(costs).reduce(function (acc, k) {
           return acc.concat([{type: k, cost: costs[k]}]);
         }, [])

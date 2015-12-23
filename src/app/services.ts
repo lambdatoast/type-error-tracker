@@ -1,5 +1,10 @@
 /// <reference path="../definitions/angularjs/angular.d.ts" />
 
+namespace App {
+  export interface HistoryEntry { day: string; errors: TE[]; costs: any[]; }
+  export type History = HistoryEntry[];
+}
+
 type Identified<A> = A & {id: string};
 
 interface TE {
@@ -18,20 +23,14 @@ interface ErrorModule {
   all: () => Array<Identified<TE>>;
   save: (error: TE) => any;
   clear: () => any;
-  remove: () => any;
-  update: () => any;
-  getById: () => any;
+  remove: (x: Identified<TE>) => void;
+  update: (x: Identified<TE>) => void;
+  getById: (id) => any;
   typeSystemFeatures: Object;
-  is: (s: string) => boolean;
+  is: (s: string) => (x: {type: string}) => boolean;
 };
 
-angular.module('starter.services', [])
-
-.factory('moment', function($window) {
-  return $window.moment;
-})
-
-.factory('Error', function($window) {
+function ErrorFactory($window): ErrorModule {
 
   function save(error) {
     error.id = +(new Date());
@@ -49,7 +48,7 @@ angular.module('starter.services', [])
     }
   }
 
-  function getById(id) {
+  function getById(id: string): Identified<TE> {
     var xs = all().filter(function (e) {
       return e.id+'' === id+'';
     });
@@ -64,7 +63,7 @@ angular.module('starter.services', [])
     $window.localStorage.removeItem('errors');
   }
 
-  function remove(error) {
+  function remove(error: Identified<TE>): void {
     var errors = all().filter(function (e) {
       return e.id !== error.id;
     });
@@ -89,7 +88,7 @@ angular.module('starter.services', [])
     linear: { checked: false }
   };
 
-  function is(type: string) { return function (error) { return error.type === type; }; }
+  function is(type: string) { return function (a: {type: string}) { return a.type === type; }; }
 
   return {
     all: all,
@@ -102,7 +101,15 @@ angular.module('starter.services', [])
     is: is
   };
 
+}
+
+angular.module('starter.services', [])
+
+.factory('moment', function($window) {
+  return $window.moment;
 })
+
+.factory('Error', ErrorFactory)
 
 .factory('Cost', function(Error) {
   function totalHours(errors : Array<TE>) : string {
